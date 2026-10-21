@@ -88,6 +88,8 @@ Options:
 - `--minutes N`, `--max-requests N`: run deadline and model-request limit.
 - `--budget N`: **soft** USD threshold based on returned provider usage. Concurrent in-flight requests can exceed it; interrupted responses may lack usage. Use a provider-side key limit for a strict spending limit. This is not a budget for Archil or storage.
 
+Model responses are capped at 4,096 output tokens. Large file-write arguments can be truncated before execution; agents should split large modules or edits into smaller responses. Increasing the time or spending limit does not change this per-response cap.
+
 Tool dispatch is uncapped; independent tools in a model response execute concurrently. `--agents` controls available model contexts, not an execution-slot pool. Increase scale deliberately: model rate limits, filesystem contention and inference spending still apply.
 
 ```sh
