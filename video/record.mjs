@@ -6,6 +6,7 @@ import { once } from "node:events";
 import { parseArgs } from "node:util";
 import { chromium } from "playwright";
 import { hashes } from "./prepare.mjs";
+import { waitForFilm } from "./readiness.mjs";
 const { values: v } = parseArgs({
   options: {
     site: { type: "string", default: "replay" },
@@ -135,11 +136,7 @@ try {
     waitUntil: "domcontentloaded",
     timeout: 60000,
   });
-  await page.waitForFunction(
-    () => window.swarmFilm?.ready,
-    {},
-    { polling: 100, timeout: 90000 },
-  );
+  await waitForFilm(page);
   const game = await (
     await page.locator("#game").elementHandle()
   ).contentFrame();

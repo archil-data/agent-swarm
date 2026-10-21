@@ -130,6 +130,7 @@ Source files persist on the shared disk, but raw events are uploaded on harness 
 
 ```sh
 npx playwright install chromium
+npm run test:recorder
 # Install FFmpeg separately, or set FFMPEG_PATH to its executable.
 npm run replay -- --artifacts artifacts --out replay
 npm run record -- --site replay --out swarm.mp4 --preview
@@ -154,6 +155,6 @@ The recorder advances RAF and browser timers. It is intended for local static ap
 
 Before publishing traces, review their contents: raw model conversations, source and task messages can contain material specific to the task. API keys are supplied only as coordinator environment variables; agent code execution does not receive inference credentials.
 
-Validation: the local suite exercises the real Pi loop with scripted model responses, source-version/ownership checks and replay acceptance. The conflict command has also been tested against real Archil serverless execution. The extracted example has not been used for a new paid model-driven application build.
+Validation: the local suite exercises the real Pi loop with scripted model responses, source-version/ownership checks, production bundle parsing and replay acceptance. `npm run test:recorder` separately checks delayed initialization with frozen timers in a real browser. The conflict command has also been tested against real Archil serverless execution. Fresh cloud validation has exercised real model and tool calls; completion of a new model-driven application build has not yet been validated.
 
 MIT licensed. Pi and other dependencies retain their respective licenses.
