@@ -1,0 +1,7 @@
+node_modules/
+artifacts*/
+.env
+.env.*
+!.env.example
+*.mp4
+__pycache__/

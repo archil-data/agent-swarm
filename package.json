@@ -1,0 +1,29 @@
+{
+  "name": "archil-agent-swarm-example",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A custom Pi harness for agents coordinating through one Archil filesystem",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs && python3 -m unittest discover -s tests -p '*_test.py'",
+    "start": "node src/cli.mjs run",
+    "conflict": "node src/cli.mjs conflict",
+    "export": "node src/cli.mjs export",
+    "replay": "node video/prepare.mjs",
+    "record": "node video/record.mjs"
+  },
+  "dependencies": {
+    "@earendil-works/pi-agent-core": "1.3.0",
+    "@earendil-works/pi-ai": "1.3.0",
+    "disk": "1.9.0",
+    "typebox": "1.3.27"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.11",
+    "playwright": "1.56.1",
+    "prettier": "3.6.2"
+  }
+}

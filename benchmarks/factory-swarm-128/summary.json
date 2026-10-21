@@ -1,0 +1,114 @@
+{
+  "experiment": "128-agent self-coordinating factory-game experiment",
+  "implementationScope": "Historical experiment using a larger runner. This repository is a smaller teaching extraction; no new paid model-driven application build of the extraction is claimed.",
+  "runtime": {
+    "availableAgentContexts": 128,
+    "coordinator": {
+      "nodeProcessCount": 1,
+      "vcpu": 4,
+      "memoryMiB": 4096,
+      "location": "Archil sandbox"
+    },
+    "inference": "OpenRouter",
+    "toolExecution": "Archil serverless executions",
+    "recordedPhases": 13,
+    "summedRecordedActiveSeconds": 4882.464999914169,
+    "durationScope": "Summed recorded phase durations, including retries and repairs; excludes gaps between phases and is not end-to-end elapsed time."
+  },
+  "participation": {
+    "taskCreators": 75,
+    "agentsWithAcceptedArtifactWrites": 87,
+    "scope": "Accepted writes are participation evidence, not proof of net useful work."
+  },
+  "validation": {
+    "nodeTestsPassed": 565,
+    "browserChecks": {
+      "pause": true,
+      "resume": true,
+      "rotation": true,
+      "reset": true,
+      "timeAdvances": true,
+      "build": true,
+      "remove": true,
+      "mobileNoOverflow": true,
+      "mobilePanelsDoNotOverlap": true,
+      "deliveryAfter30Seconds": true
+    },
+    "sourceMatchesBrowser": true,
+    "sourceMatchesTests": true,
+    "formalReadinessDeclared": false,
+    "scope": "Final game passed independent checks after host QA and harness repairs; legacy unfinished task records remained at the final checkpoint."
+  },
+  "toolCallCounting": {
+    "unit": "Model-selected tool invocations, counted once from native_tool_call events across all 13 recorded phases. Agent/tool-call ID pairs were unique.",
+    "includes": [
+      "Failed and rejected calls",
+      "Retries and repeated work"
+    ],
+    "excludes": [
+      "Harness heartbeat, observer and validation execution requests",
+      "External host QA and probes",
+      "Scripted protocol demonstration and publication tests"
+    ],
+    "modelToolCalls": 10621,
+    "toolResultsFlaggedError": 733,
+    "errorScope": "Tool results marked isError; non-error refusals such as an unavailable lease or task may also represent no progress.",
+    "callsByTool": {
+      "read_file": 2055,
+      "claim_task": 1135,
+      "run_command": 863,
+      "acquire_lock": 712,
+      "read_context": 705,
+      "list_tasks": 687,
+      "run_tests": 516,
+      "list_files": 404,
+      "abandon_task": 372,
+      "read_messages": 359,
+      "browser_check": 338,
+      "release_lock": 280,
+      "complete_task": 266,
+      "wait_for_work": 260,
+      "write_file": 256,
+      "create_tasks": 238,
+      "edit_file": 208,
+      "create_task": 203,
+      "view_image": 199,
+      "elect_leader": 158,
+      "read_task": 132,
+      "send_message": 102,
+      "generate_image": 97,
+      "generate_asset": 46,
+      "update_task": 13,
+      "publish_image": 9,
+      "cancel_task": 5,
+      "wake_peers": 2,
+      "list_messages": 1
+    },
+    "groups": {
+      "Reading shared state and files": 4343,
+      "Task coordination and team management": 2754,
+      "File lease acquisition and release": 992,
+      "Source writes and edits": 464,
+      "Commands and tests": 1379,
+      "Browser checks": 338,
+      "Image and asset tools": 351
+    },
+    "harnessExecutionRequests": {
+      "leaseRenewal": 3552,
+      "observation": 940,
+      "validation": 13
+    },
+    "notes": [
+      "Counts include refused, failed and repeated attempts; successful operations are not necessarily net useful work.",
+      "generate_image invocations differ from actual image-provider requests: budgets, validation and errors can reject attempts.",
+      "The smaller public teaching extraction supplies a different tool set and has not had a fresh paid model build."
+    ]
+  },
+  "limitations": [
+    "Multiple phases, host QA feedback and harness repairs were necessary.",
+    "Models, prompts and infrastructure changed across phases; this is not a controlled performance comparison.",
+    "Tool calls are not one-to-one with serverless executions or image-provider requests.",
+    "Historical browser/image tools are outside the smaller reference tool set.",
+    "No private raw trace or original game is included."
+  ]
+}

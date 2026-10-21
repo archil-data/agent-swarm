@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Archil · 128-agent experiment</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+        background: #101715;
+        color: #edf2e9;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      body {
+        padding: 30px 32px;
+      }
+      header {
+        height: 130px;
+      }
+      .brandrow {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #96a999;
+        font-size: 20px;
+        letter-spacing: 1px;
+      }
+      .brand {
+        color: #d1e5c2;
+        font-weight: 750;
+        font-size: 27px;
+        letter-spacing: 3px;
+      }
+      .brandrow span {
+        font-size: 19px;
+        letter-spacing: 0;
+      }
+      h1 {
+        font-size: 51px;
+        letter-spacing: -1.5px;
+        font-weight: 600;
+        margin: 18px 0 0;
+        line-height: 1.1;
+      }
+      h1 em {
+        font-style: normal;
+        color: #aecb9c;
+      }
+      #phasebar {
+        height: 54px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+      #phase {
+        font-size: 29px;
+        font-weight: 500;
+        color: #d6dfd1;
+      }
+      #clock {
+        font:
+          30px ui-monospace,
+          monospace;
+        color: #d0ad7f;
+      }
+      #clock small {
+        font:
+          18px -apple-system,
+          sans-serif;
+        color: #8c9b8d;
+        margin-left: 9px;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 630px 368px;
+        gap: 18px;
+        height: 510px;
+      }
+      .panel {
+        border: 1px solid #34443a;
+        border-radius: 12px;
+        background: #17221c;
+        overflow: hidden;
+      }
+      .label {
+        font-size: 24px;
+        font-weight: 500;
+        color: #c5d3bf;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 17px 18px 10px;
+      }
+      .label small {
+        font-size: 17px;
+        color: #859b86;
+        font-weight: 400;
+      }
+      .board {
+        position: relative;
+      }
+      #diagram {
+        position: relative;
+        height: 414px;
+        margin: 0 15px;
+        background-image: radial-gradient(#3d504237 0.8px, transparent 0.8px);
+        background-size: 17px 17px;
+      }
+      #edges {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      #edges path {
+        fill: none;
+        stroke: #63846b;
+        stroke-width: 1.5;
+        opacity: 0.43;
+      }
+      .node {
+        position: absolute;
+        width: 174px;
+        height: 78px;
+        border: 1px solid #374c3d;
+        border-radius: 8px;
+        background: #1a281f;
+        padding: 12px 11px;
+        opacity: 0.42;
+      }
+      .node strong {
+        font-weight: 550;
+        font-size: 23px;
+        line-height: 1.18;
+        display: block;
+        color: #b4c0af;
+      }
+      .node small {
+        display: block;
+        font-size: 15px;
+        margin-top: 7px;
+        color: #829b83;
+      }
+      .node.written {
+        opacity: 1;
+        background: #243a29;
+        border-color: #8ab181;
+      }
+      .node.written strong {
+        color: #dbebd0;
+      }
+      .node.conflict {
+        border-color: #e5ac69;
+        background: #4a3724;
+      }
+      .node.conflict strong {
+        color: #ffdfb0;
+      }
+      .boardfoot {
+        display: flex;
+        gap: 23px;
+        font-size: 19px;
+        color: #8fa38e;
+        padding: 0 20px;
+      }
+      .boardfoot b {
+        font-weight: 400;
+        color: #bdd2ac;
+      }
+      .boardfoot span:last-child {
+        color: #d8ad7d;
+      }
+      .sidebar {
+        display: grid;
+        grid-template-rows: 300px 192px;
+        gap: 18px;
+      }
+      .gameborder {
+        background: #101512;
+      }
+      .gameborder .label {
+        font-size: 22px;
+        padding: 14px 16px 10px;
+      }
+      .gameborder .label small {
+        font-size: 16px;
+      }
+      .gamehole {
+        height: 238px;
+        margin: 0 12px;
+        border: 1px solid #34433a;
+        background: #242424;
+      }
+      #game {
+        position: fixed;
+        left: 693px;
+        top: 265px;
+        width: 1080px;
+        height: 640px;
+        border: 0;
+        transform: scale(0.3111);
+        transform-origin: top left;
+        z-index: 5;
+        pointer-events: none;
+        background: #222;
+      }
+      .artpanel .label {
+        font-size: 22px;
+        padding: 13px 16px 7px;
+      }
+      .artgrid {
+        display: flex;
+        justify-content: space-between;
+        gap: 7px;
+        padding: 0 12px;
+      }
+      .artgrid img {
+        width: 79px;
+        height: 143px;
+        object-fit: contain;
+        background: #101713;
+        border-radius: 6px;
+        opacity: 0;
+        filter: saturate(0.85);
+      }
+      .artgrid > div {
+        width: 79px;
+        height: 143px;
+        border-radius: 6px;
+        background: #1c2920;
+        border: 1px dashed #3a4c3d;
+      }
+      .lower {
+        display: grid;
+        grid-template-columns: 680px 318px;
+        gap: 18px;
+        margin-top: 18px;
+        height: 218px;
+      }
+      .agents .label {
+        font-size: 24px;
+        padding-top: 16px;
+        padding-bottom: 12px;
+      }
+      .agents .label small {
+        font-size: 18px;
+      }
+      #agents {
+        display: grid;
+        grid-template-columns: repeat(16, 1fr);
+        gap: 4px;
+        margin: 0 18px;
+      }
+      #agents i {
+        height: 12px;
+        border: 1px solid #354b3b;
+        background: #233127;
+        border-radius: 2px;
+      }
+      #agents i[data-state="thinking"] {
+        background: #738b61;
+        border-color: #91a57c;
+      }
+      #agents i[data-state="tools"] {
+        background: #53858a;
+        border-color: #78a2a0;
+      }
+      #agents i[data-state="testing"] {
+        background: #8c83ad;
+        border-color: #b5a4c8;
+      }
+      #agents i[data-state="writing"] {
+        background: #c8e2ad;
+        border-color: #dff0cd;
+      }
+      #agents i[data-state="drawing"] {
+        background: #c2a371;
+        border-color: #e2c794;
+      }
+      #agents i.contributed {
+        box-shadow: inset 0 -2px #b4d69d;
+      }
+      .legend {
+        display: flex;
+        gap: 18px;
+        padding: 10px 18px 0;
+        font-size: 17px;
+        color: #91a28e;
+      }
+      .legend .think {
+        color: #a0b58b;
+      }
+      .legend .tools {
+        color: #79aaac;
+      }
+      .legend .write {
+        color: #d2e7b6;
+      }
+      .legend .test {
+        color: #b4a7ce;
+      }
+      .legend .art {
+        color: #ddbf89;
+      }
+      .activity .label {
+        font-size: 22px;
+        padding: 15px 15px 3px;
+      }
+      .activity .count {
+        font:
+          40px ui-monospace,
+          monospace;
+        padding-left: 15px;
+        color: #b8d3a9;
+        line-height: 1.2;
+      }
+      #chart {
+        width: 284px;
+        height: 83px;
+        margin: 0 15px;
+      }
+      .activity p {
+        font-size: 17px;
+        color: #879a88;
+        margin: 0 15px;
+      }
+      .facts {
+        margin-top: 17px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        height: 87px;
+      }
+      .fact {
+        border-top: 1px solid #3d5140;
+        padding-top: 10px;
+      }
+      .fact strong {
+        display: block;
+        font-size: 40px;
+        font-weight: 550;
+        color: #e2e9d9;
+        letter-spacing: -1px;
+        font-variant-numeric: tabular-nums;
+      }
+      .fact span {
+        font-size: 18px;
+        color: #91a18e;
+      }
+      #result {
+        display: none;
+        position: fixed;
+        left: 32px;
+        right: 32px;
+        top: 209px;
+        height: 748px;
+        border: 1px solid #6c5840;
+        background: #182019;
+        border-radius: 12px;
+        z-index: 3;
+      }
+      #result .resulthead {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 19px;
+        border-bottom: 1px solid #564934;
+        height: 64px;
+      }
+      #result strong {
+        font-size: 32px;
+        font-weight: 550;
+        color: #e9b57b;
+      }
+      #result .resulthead span {
+        font-size: 23px;
+        color: #c8d5bc;
+      }
+      #result .gamecaption {
+        font-size: 23px;
+        color: #b9c8b0;
+        padding: 13px 20px;
+      }
+      #result .failure {
+        position: absolute;
+        bottom: 14px;
+        left: 20px;
+        right: 20px;
+        padding: 10px 15px;
+        border: 1px solid #816341;
+        border-radius: 6px;
+        background: #332b20;
+        color: #edc492;
+        font-size: 26px;
+      }
+      body.ending .layout,
+      body.ending .lower {
+        visibility: hidden;
+      }
+      body.ending #result {
+        display: block;
+      }
+      body.ending #game {
+        left: 72px;
+        top: 321px;
+        width: 1080px;
+        height: 640px;
+        transform: scale(0.8666667);
+      }
+      body.ending .facts {
+        position: fixed;
+        left: 32px;
+        right: 32px;
+        bottom: 24px;
+      }
+      body.ending #phase {
+        color: #dfbf95;
+      }
+      body.verified #result {
+        border-color: #587450;
+      }
+      body.verified #result strong {
+        color: #cce3b7;
+      }
+      body.verified #result .resulthead {
+        border-color: #3e5939;
+      }
+      body.verified #result .failure {
+        border-color: #58754d;
+        background: #20331f;
+        color: #cde4bb;
+      }
+      body.verified.ending #phase {
+        color: #c7dcb6;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brandrow">
+        <div class="brand">ARCHIL</div>
+        <span>RECORDED EXPERIMENT · ACCELERATED</span>
+      </div>
+      <h1><span id="agentHeading">Agents.</span> <em>One filesystem.</em></h1>
+    </header>
+    <div id="phasebar">
+      <div id="phase">One shared brief.</div>
+      <div id="clock">00:00<small>active time</small></div>
+    </div>
+    <div class="layout">
+      <div class="panel board">
+        <div class="label">
+          Components <small>from recorded file writes</small>
+        </div>
+        <div id="diagram">
+          <svg id="edges" viewBox="0 0 600 414"></svg>
+          <div id="nodes"></div>
+        </div>
+        <div class="boardfoot">
+          <b>● Written</b><span>— Imports</span><span>● Write contention</span>
+        </div>
+      </div>
+      <div class="sidebar">
+        <div class="panel gameborder">
+          <div class="label">Final artifact <small>unmodified</small></div>
+          <div class="gamehole"></div>
+        </div>
+        <div class="panel artpanel">
+          <div class="label">Agent-created assets</div>
+          <div class="artgrid" id="art"></div>
+        </div>
+      </div>
+    </div>
+    <iframe
+      id="game"
+      name="swarm-game"
+      title="The agents' unmodified final artifact"
+      src="game/index.html"
+      sandbox="allow-scripts"
+    ></iframe>
+    <div class="lower">
+      <div class="panel agents">
+        <div class="label">
+          Individual agent status
+          <small><span id="contextCount"></span> Pi contexts</small>
+        </div>
+        <div id="agents"></div>
+        <div class="legend">
+          <span class="think">● Thinking</span><span class="tools">● Tools</span
+          ><span class="write">● Writing</span
+          ><span class="test">● Testing</span><span class="art">● Art</span
+          ><span>● Waiting</span>
+        </div>
+      </div>
+      <div class="panel activity">
+        <div class="label">
+          <span id="computeLabel">Tool executions</span> <small>recorded</small>
+        </div>
+        <div class="count" id="inflight">0</div>
+        <svg id="chart" viewBox="0 0 284 83"></svg>
+        <p><span id="computeScope">In flight</span></p>
+      </div>
+    </div>
+    <div class="facts">
+      <div class="fact">
+        <strong id="taskCount">0</strong><span>Agent-created tasks</span>
+      </div>
+      <div class="fact">
+        <strong id="writers">0</strong><span>Agents wrote files</span>
+      </div>
+      <div class="fact">
+        <strong id="toolCount">0</strong><span>Model tool calls</span>
+      </div>
+    </div>
+    <div id="result">
+      <div class="resulthead">
+        <strong>Integration incomplete.</strong><span>Acceptance pending</span>
+      </div>
+      <div class="gamecaption">Exact exported agent-authored artifact</div>
+      <div class="failure">Independent browser acceptance not supplied</div>
+    </div>
+    <script type="module" src="film.js"></script>
+  </body>
+</html>
