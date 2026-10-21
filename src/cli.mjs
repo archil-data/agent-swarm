@@ -102,6 +102,23 @@ export async function prepare(api, brief, out) {
     throw error;
   }
 }
+export function bundleHarness(buildBundle = build) {
+  return buildBundle({
+    entryPoints: [path.join(root, "src/cloud-entry.mjs")],
+    write: false,
+    bundle: true,
+    platform: "node",
+    format: "esm",
+    target: "node24",
+    // The REST SDK exposes optional local mounting. The cloud coordinator uses
+    // the REST API only; never bundle a native client found in ancestor folders.
+    external: ["@archildata/native"],
+    metafile: true,
+    banner: {
+      js: "import {createRequire as __archilCreateRequire} from 'node:module';const require=__archilCreateRequire(import.meta.url);",
+    },
+  });
+}
 export async function conflict(remote) {
   const must = (x) => {
     if (!x.ok) throw Error(x.error);
@@ -275,17 +292,7 @@ export async function main(
       console.log(JSON.stringify({ diskId: disk.id, ...result }));
       return;
     }
-    const bundle = await buildBundle({
-      entryPoints: [path.join(root, "src/cloud-entry.mjs")],
-      write: false,
-      bundle: true,
-      platform: "node",
-      format: "esm",
-      target: "node24",
-      banner: {
-        js: "import {createRequire} from 'node:module';const require=createRequire(import.meta.url);",
-      },
-    });
+    const bundle = await bundleHarness(buildBundle);
     checkInterrupted();
     await disk.putObject("runtime/harness.mjs", bundle.outputFiles[0].contents);
     await disk.putObject("runtime/config.json", JSON.stringify(config));

@@ -3,7 +3,45 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { prepare, main } from "../src/cli.mjs";
+import { spawnSync } from "node:child_process";
+import { build } from "esbuild";
+import { prepare, main, bundleHarness } from "../src/cli.mjs";
+
+test("production cloud bundle parses and excludes optional native clients even when locally installed", async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "swarm-bundle-"));
+  try {
+    const native = path.join(dir, "node_modules/@archildata/native");
+    fs.mkdirSync(native, { recursive: true });
+    fs.writeFileSync(
+      path.join(native, "package.json"),
+      JSON.stringify({
+        name: "@archildata/native",
+        type: "module",
+        main: "index.js",
+      }),
+    );
+    fs.writeFileSync(
+      path.join(native, "index.js"),
+      "import{createRequire}from'node:module';export const ArchilClient=createRequire(import.meta.url)('./platform.node');",
+    );
+    const result = await bundleHarness((options) =>
+      build({ ...options, nodePaths: [path.join(dir, "node_modules")] }),
+    );
+    assert.ok(
+      !Object.keys(result.metafile.inputs).some((input) =>
+        input.includes("@archildata/native"),
+      ),
+    );
+    const check = spawnSync(
+      process.execPath,
+      ["--check", "--input-type=module"],
+      { input: result.outputFiles[0].contents, encoding: "utf8" },
+    );
+    assert.equal(check.status, 0, check.stderr);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
 
 test("bad local input allocates no disk; failed uploads save the recovery ID and delete the disk", async () => {
   const out = fs.mkdtempSync(path.join(os.tmpdir(), "swarm-setup-"));
