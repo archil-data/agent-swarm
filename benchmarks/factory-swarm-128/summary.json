@@ -1,6 +1,6 @@
 {
   "experiment": "128-agent self-coordinating factory-game experiment",
-  "implementationScope": "Historical experiment using a larger runner. This repository is a smaller teaching extraction; no new paid model-driven application build of the extraction is claimed.",
+  "implementationScope": "Historical experiment using a larger runner. These results describe that experiment, not a benchmark of the smaller teaching extraction. See the README validation notes for independent testing of the extracted implementation.",
   "runtime": {
     "availableAgentContexts": 128,
     "coordinator": {
@@ -101,7 +101,7 @@
     "notes": [
       "Counts include refused, failed and repeated attempts; successful operations are not necessarily net useful work.",
       "generate_image invocations differ from actual image-provider requests: budgets, validation and errors can reject attempts.",
-      "The smaller public teaching extraction supplies a different tool set and has not had a fresh paid model build."
+      "The smaller public teaching extraction supplies a different tool set; these historical counts do not describe its separate guide-validation run."
     ]
   },
   "limitations": [
